@@ -26,7 +26,7 @@ The application utilizes data from the following dataset for antelope species: [
 To set up the project on your local machine, follow these steps:
 
 ```bash
-git clone MadKudu_project
+git clone git@github.com:Alex-Prevot/MadKudu_project.git
 cd MadKudu_project
 
 # Setup environment variables
