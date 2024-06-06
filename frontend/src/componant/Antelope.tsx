@@ -1,4 +1,4 @@
-import { Box, Grid, Text, SimpleGrid, Button, Flex, Input, Select, useToast } from "@chakra-ui/react";
+import { Box, Grid, Text, SimpleGrid, Button, Flex, Input, Select, useToast, Stat, StatLabel, StatNumber, StatGroup } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
@@ -51,6 +51,16 @@ const Antelope = () => {
     (filterHorns ? antelope.horns === filterHorns : true)
   );
 
+  const continentCounts: any = filteredAntelopes.reduce((counts: any, antelope) => {
+    counts[antelope.continent] = (counts[antelope.continent] || 0) + 1;
+    return counts;
+  }, {});
+
+  const hornCounts: any = filteredAntelopes.reduce((counts: any, antelope) => {
+    counts[antelope.horns] = (counts[antelope.horns] || 0) + 1;
+    return counts;
+  }, {});
+
   const handleAddToCollection = async (userId: string) => {
     try {
       await axios.post(`http://localhost:8080/antelope/collection/${userId}`, {
@@ -90,6 +100,7 @@ const Antelope = () => {
             onChange={(e) => setFilterContinent(e.target.value)}
             width="30%"
           >
+            <option value="">All Continents</option>
             <option value="Africa">Africa</option>
             <option value="Asia">Asia</option>
             <option value="North America">North America</option>
@@ -101,11 +112,29 @@ const Antelope = () => {
             onChange={(e) => setFilterHorns(e.target.value)}
             width="30%"
           >
+            <option value="">All Horn Types</option>
+            <option value="Twisted">Twisted</option>
             <option value="Straight">Straight</option>
-            <option value="Curved">Curved</option>
+            <option value="Spiky">Spiky</option>
             <option value="Spiraled">Spiraled</option>
+            <option value="Lyre-shaped">Lyre-shaped</option>
+            <option value="Curved">Curved</option>
           </Select>
         </Flex>
+        <StatGroup mt={4}>
+          {Object.keys(continentCounts).map(continent => (
+            <Stat key={continent}>
+              <StatLabel>{continent} (Continent)</StatLabel>
+              <StatNumber>{continentCounts[continent]}</StatNumber>
+            </Stat>
+          ))}
+          {Object.keys(hornCounts).map(hornType => (
+            <Stat key={hornType}>
+              <StatLabel>{hornType} (Horn)</StatLabel>
+              <StatNumber>{hornCounts[hornType]}</StatNumber>
+            </Stat>
+          ))}
+        </StatGroup>
         <SimpleGrid
           columns={{ sm: 1, md: 2, lg: 3 }}
           spacing={5}

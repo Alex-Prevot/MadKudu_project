@@ -8,6 +8,10 @@ import {
   Input,
   Select,
   useToast,
+  StatGroup,
+  Stat,
+  StatLabel,
+  StatNumber,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -99,6 +103,16 @@ const AntelopeMyCollection = () => {
     }
   };
 
+  const continentCounts: any = filteredAntelopes.reduce((counts: any, antelope) => {
+    counts[antelope.continent] = (counts[antelope.continent] || 0) + 1;
+    return counts;
+  }, {});
+
+  const hornCounts: any = filteredAntelopes.reduce((counts: any, antelope) => {
+    counts[antelope.horns] = (counts[antelope.horns] || 0) + 1;
+    return counts;
+  }, {});
+
   return (
     <Box textAlign="center" fontSize="xl">
       <Grid minH="10vh" p={3}>
@@ -135,6 +149,20 @@ const AntelopeMyCollection = () => {
             <option value="Spiraled">Spiraled</option>
           </Select>
         </Flex>
+        <StatGroup mt={4}>
+          {Object.keys(continentCounts).map(continent => (
+            <Stat key={continent}>
+              <StatLabel>{continent} (Continent)</StatLabel>
+              <StatNumber>{continentCounts[continent]}</StatNumber>
+            </Stat>
+          ))}
+          {Object.keys(hornCounts).map(hornType => (
+            <Stat key={hornType}>
+              <StatLabel>{hornType} (Horn)</StatLabel>
+              <StatNumber>{hornCounts[hornType]}</StatNumber>
+            </Stat>
+          ))}
+        </StatGroup>
         <SimpleGrid
           columns={{ sm: 1, md: 2, lg: 3 }}
           spacing={5}
