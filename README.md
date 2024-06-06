@@ -1,4 +1,6 @@
-# Antelope Species Visualizer
+# Technical Document
+
+## Antelope Species Visualizer
 
 ## Project Overview
 This web application visualizes data related to antelope species, providing interactive and informative insights through a user-friendly interface. It allows users to manage their personal collection of antelopes and explore various data aspects using dynamic charts and tables.
