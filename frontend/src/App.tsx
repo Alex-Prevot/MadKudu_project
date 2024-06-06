@@ -1,42 +1,33 @@
 import {
   ChakraProvider,
-  Box,
-  VStack,
-  Grid,
-  Button,
   theme,
 } from "@chakra-ui/react";
-import { BrowserRouter as Router, Routes, Route, Link as RouterLink } from "react-router-dom";
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
-import { Logo } from "./Logo";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
 import RegisterForm from "./componant/RegisterForm";
 import LoginForm from "./componant/LoginForm";
-import Connection from "./componant/Connection";
+import Antelope from "./componant/Antelope";
+import Menu from "./componant/Menu";
+import HomePage from "./componant/HomePage";
+import { UserProvider } from "./componant/UserContext";
+import AntelopeMyCollection from "./componant/AntelopeMyCollection";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
-    <Router>
-      <Routes>
-        <Route path="/" element={
-          <Box textAlign="center" fontSize="xl">
-            <Grid minH="50vh" p={3}>
-              <ColorModeSwitcher justifySelf="flex-end" />
-              <VStack spacing={8}>
-                <Logo h="40vmin" pointerEvents="none" />
-                <Button colorScheme="teal" as={RouterLink} to="/register">
-                  Go to Register
-                </Button>
-                <Button colorScheme="teal" as={RouterLink} to="/login">
-                  Go to Login
-                </Button>
-              </VStack>
-            </Grid>
-          </Box>
-        } />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/connection" element={<Connection/>} />
-      </Routes>
-    </Router>
+    <UserProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/my-collection" element={<AntelopeMyCollection/>} />
+          <Route path="/all-collection" element={<Antelope />} />
+          <Route path="/menu" element={<Menu />} />
+        </Routes>
+      </Router>
+    </UserProvider>
   </ChakraProvider>
 );

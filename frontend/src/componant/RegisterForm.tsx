@@ -1,33 +1,42 @@
-import * as React from "react";
-import {
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Grid,
-} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, FormControl, FormLabel, Input, Button, Grid, useToast } from "@chakra-ui/react";
+import { useUser } from "./UserContext";
+import { useNavigate } from "react-router-dom";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
-import { BrowserRouter as Router, Routes, Route, Link as RouterLink } from "react-router-dom";
-import axios from "axios";
 
 const RegisterForm = () => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { registerUser } = useUser();
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/users/register", {
-        email,
-        password,
+      await registerUser(email, password);
+      toast({
+        title: "Registration successful.",
+        description: "",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
       });
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
+      navigate('/menu');
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      toast({
+        title: "Registration failed.",
+        description: error.response?.data?.message || "Unable to register.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
     }
   };
-
+  
   return (
     <Box textAlign="center" fontSize="xl">
       <Grid minH="10vh" p={3}>
@@ -52,7 +61,7 @@ const RegisterForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
-            <Button mt={4} colorScheme="teal" type="submit" as={RouterLink} to="/connection">
+            <Button mt={4} colorScheme="teal" type="submit">
               Register
             </Button>
           </form>

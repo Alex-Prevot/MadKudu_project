@@ -6,24 +6,42 @@ import {
   Input,
   Button,
   Grid,
+  useToast,
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "../ColorModeSwitcher";
-import { BrowserRouter as Router, Routes, Route, Link as RouterLink } from "react-router-dom";
-import axios from "axios";
+import {useNavigate } from "react-router-dom";
+import { useUser } from "./UserContext";
 
 const LoginForm = () => {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const { loginUser } = useUser();
+  const toast = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/users/login", {
-        email,
-        password,
+      await loginUser(email, password);
+      toast({
+        title: "Login successful.",
+        description: "",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
       });
-    } catch (error) {
-      console.error(error);
+      navigate('/menu');
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      toast({
+        title: "Registration failed.",
+        description: error.response?.data?.message || "Unable to register.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "top",
+      });
     }
   };
 
@@ -51,7 +69,7 @@ const LoginForm = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </FormControl>
-            <Button mt={4} colorScheme="teal" type="submit" as={RouterLink} to="/connection">
+            <Button mt={4} colorScheme="teal" type="submit">
               Login
             </Button>
           </form>
